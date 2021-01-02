@@ -1,4 +1,4 @@
-﻿namespace BLEU
+﻿namespace BLEU.Collectors
 {
     public interface ICollector<T>
     {

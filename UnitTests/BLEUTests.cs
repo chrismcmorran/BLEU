@@ -1,4 +1,6 @@
-﻿using BLEU;
+﻿using System.Collections.Generic;
+using BLEU;
+using BLEU.Collectors;
 using NUnit.Framework;
 
 namespace UnitTests
@@ -29,6 +31,18 @@ namespace UnitTests
             var bleu = new BleuScore();
             var precision = bleu.ModifiedUnigramPrecision(reference, candidate);
             double expected = 2.0d / 7.0d;
+            Assert.AreEqual(expected, precision);
+        }
+        
+        [Test]
+        public void TestBiGramPrecisionStrings()
+        {
+            var candidate = "The cat the cat on the mat.";
+            var references = new List<string> {"The cat is on the mat.", "There is a cat on the mat."};
+
+            var bleu = new BleuScore();
+            var precision = bleu.ModifiedNGramPrecision(references, candidate, 2);
+            double expected = 2.0 / 3.0;
             Assert.AreEqual(expected, precision);
         }
     }

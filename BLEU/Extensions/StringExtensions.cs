@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace BLEU
+namespace BLEU.Extensions
 {
     public static class StringExtensions
     {

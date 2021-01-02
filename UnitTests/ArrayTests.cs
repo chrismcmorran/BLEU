@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using BLEU;
+using BLEU.Extensions;
 using NUnit.Framework;
 
 namespace UnitTests

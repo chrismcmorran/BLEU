@@ -1,11 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using BLEU.Collectors;
 using BLEU.Structures;
 
 namespace BLEU
 {
     public class BleuScore
     {
+        public double ModifiedNGramPrecision(ICollection<string> references, string candidate, int grams=2)
+        {
+            var count = new FrequencyDistribution<string>(new NGramCollector(candidate, grams).Collect());
+            var countClip = new Dictionary<string, int>();
+            
+            foreach (var word in count.Keys)
+            {
+                countClip[word] = 0;
+                foreach (var reference in references)
+                {
+                    var dist = new FrequencyDistribution<string>(new NGramCollector(reference, grams).Collect());
+                    if (dist.ContainsKey(word))
+                    {
+                        countClip[word] = dist.FrequencyOf(word);
+                        break;
+                    }
+                }
+            }
 
+            return countClip.Values.Sum() / (double) count.Values.Sum();
+        }
+
+        public double ModifiedBiGramPrecision(ICollection<string> references, string candidate)
+        {
+            return ModifiedNGramPrecision(references, candidate, 2);
+        }
 
         /// <summary>
         /// Calculates the modified unigram precision score as described in section 2.1 of the paper.

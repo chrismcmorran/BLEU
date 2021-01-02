@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
+using BLEU.Extensions;
 
-namespace BLEU
+namespace BLEU.Collectors
 {
     public enum Casing
     {

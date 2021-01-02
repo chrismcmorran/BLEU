@@ -16,7 +16,7 @@ namespace UnitTests
         public void TestMostFrequentKey()
         {
             var dist = new FrequencyDistribution<string>("a a a a b c d e e ffff".Split(" "));
-            Assert.AreEqual("a", dist.MostFrequent());
+            Assert.AreEqual("a", dist.MostFrequentLabel());
         }
     }
 }
