@@ -14,6 +14,7 @@ namespace BLEU
     public class NGramCollector : ICollector<string>
     {
         public int Grams { get; set; }
+
         public string Word { get; set; }
 
         public Casing UseCase { get; set; }
@@ -24,7 +25,7 @@ namespace BLEU
         
         public bool RemoveDigits { get; set; }
         
-        public NGramCollector(string word="", int grams=1, Casing useCase=Casing.Lower, string separator=" ", bool stripPunctuation=false, bool removeDigits=false)
+        public NGramCollector(string word="", int grams=1, Casing useCase=Casing.Lower, string separator=" ", bool stripPunctuation=true, bool removeDigits=true)
         {
             Grams = grams;
             Word = word;
@@ -49,14 +50,17 @@ namespace BLEU
 
                 result[i] = sb.ToString();
             }
-
+            
             return result;
+        }
+
+        public int Size()
+        {
+            return GetParts().Length;
         }
 
         private string[] GetParts()
         {
-            string[] parts;
-
             var word = Word;
             
             if (RemovePunctuation)
@@ -68,21 +72,14 @@ namespace BLEU
             {
                 word = word.RemoveDigits();
             }
-            
-            if (this.UseCase == Casing.Lower)
+
+            var parts = this.UseCase switch
             {
-                parts = word.ToLower().Split(" ");
-            }
-            else if (this.UseCase == Casing.Upper)
-            {
-                parts = word.ToUpper().Split(" ");
-            }
-            else
-            {
-                parts = word.Split(" ");
-            }
-            
-            
+                Casing.Lower => word.ToLower().Split(Separator),
+                Casing.Upper => word.ToUpper().Split(Separator),
+                _ => word.Split(Separator)
+            };
+
             return parts;
         }
     }

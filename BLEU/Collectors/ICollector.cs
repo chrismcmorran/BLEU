@@ -3,5 +3,7 @@
     public interface ICollector<T>
     {
         T[] Collect();
+
+        int Size();
     }
 }
