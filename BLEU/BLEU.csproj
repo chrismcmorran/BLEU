@@ -2,6 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>BLEU Score</Title>
+        <Authors>Christopher McMorran</Authors>
+        <Description>An implementation of the BLEU score as described by Kishore Papineni, Salim Roukos, Todd Ward, and Wei-Jing Zhu.</Description>
+        <PackageProjectUrl>https://github.com/chrismcmorran/BLEU</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/chrismcmorran/BLEU</RepositoryUrl>
+        <PackageTags>BLEU</PackageTags>
     </PropertyGroup>
 
 </Project>
