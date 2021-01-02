@@ -81,5 +81,25 @@ namespace UnitTests
             double expected = 1.0;
             Assert.AreEqual(expected, precision);
         }
+
+        [Test]
+        public void TestSentenceBleuScorePerfect()
+        {
+            var bleu = new BleuScore();
+            var reference = new List<string> {"this is a test", "this is a test"};
+            var candidate = "this is a test";
+            var score = bleu.Score(reference, candidate);
+            Assert.AreEqual(1.0, score);
+        }
+        
+        [Test]
+        public void TestSentenceBleuOneWordChanges()
+        {
+            var bleu = new BleuScore();
+            var reference = new List<string> {"the quick brown fox jumped over the lazy dog"};
+            var candidate = "the fast brown fox jumped over the lazy dog";
+            var score = bleu.RoundedScore(reference, candidate);
+            Assert.AreEqual(0.75, score);
+        }
     }
 }

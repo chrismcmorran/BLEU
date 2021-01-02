@@ -8,6 +8,93 @@ namespace BLEU
 {
     public class BleuScore
     {
+        /// <summary>
+        /// Calculates the BLEU score.
+        /// </summary>
+        /// <param name="references">The reference sentences.</param>
+        /// <param name="candidate">The MT candidate.</param>
+        /// <param name="weights">The weights.</param>
+        /// <param name="N">The n-gram count.</param>
+        /// <returns>The score as a double.</returns>
+        public double Score(ICollection<string> references, string candidate, List<double> weights, int N=4)
+        {
+            var bp = BrevityPenalty(candidate.Length, references.Count);
+            var sum = 0.0d;
+            for (int i = 0; i < N; i++)
+            {
+                sum += weights[i] * Ln(ModifiedNGramPrecision(references, candidate, i + 1));
+            }
+
+            double average = sum / N;
+
+            return bp * Math.Exp(average);
+        }
+        
+        /// <summary>
+        /// Calculates the BLEU score.
+        /// </summary>
+        /// <param name="references">The reference sentences.</param>
+        /// <param name="candidate">The MT candidate.</param>
+        /// <param name="N">The n-gram count.</param>
+        /// <returns>The score as a double.</returns>
+        public double Score(List<string> references, string candidate, int N=4)
+        {
+            return Score(references, candidate, GetDefaultWeights(N));
+        }
+
+        /// <summary>
+        /// Calculates the BLEU score rounded to a specific number of decimal places. The default is 2.
+        /// </summary>
+        /// <param name="references">The list of references.</param>
+        /// <param name="candidate">The candidate sentence.</param>
+        /// <param name="decimalPlaces">The number of decimal places to round to.</param>
+        /// <returns>The score as a double.</returns>
+        public double RoundedScore(List<string> references, string candidate, int decimalPlaces=2)
+        {
+            return Math.Round(Score(references, candidate), decimalPlaces);
+        }
+
+        /// <summary>
+        /// Calculates the BLEU score rounded to a specific number of decimal places. The default is 2.
+        /// </summary>
+        /// <param name="references">The list of references.</param>
+        /// <param name="candidate">The candidate sentence.</param>
+        /// <param name="weights">The list of weights.</param>
+        /// <param name="decimalPlaces">The number of decimal places to round to.</param>
+        /// <returns>The score as a double.</returns>
+        public double RoundedScore(List<string> references, string candidate, List<double> weights, int decimalPlaces=2)
+        {
+            return Math.Round(Score(references, candidate, weights), decimalPlaces);
+        }
+
+        /// <summary>
+        /// Gets a list of N weights.
+        /// </summary>
+        /// <param name="N">The number of weights</param>
+        /// <returns>A list of N weights.</returns>
+        private List<double> GetDefaultWeights(int N=4)
+        {
+            var weights = new List<double>();
+            for (int i = 0; i < N; i++)
+            {
+                weights.Add(1.0);
+            }
+
+            return weights;
+        }
+
+        private double Ln(double value)
+        {
+            return Math.Log(value, Math.E);
+        }
+        
+        /// <summary>
+        /// Gets the Modified N-Gram precision score.
+        /// </summary>
+        /// <param name="references">The collection of reference sentences.</param>
+        /// <param name="candidate">The MT candidate.</param>
+        /// <param name="grams">The number of grams (default is 2).</param>
+        /// <returns>The precision as a double.</returns>
         public double ModifiedNGramPrecision(ICollection<string> references, string candidate, int grams=2)
         {
             var count = new FrequencyDistribution<string>(new NGramCollector(candidate, grams).Collect());
@@ -30,6 +117,25 @@ namespace BLEU
             return countClip.Values.Sum() / (double) count.Values.Sum();
         }
 
+        /// <summary>
+        /// Gets the Modified N-Gram precision.
+        /// </summary>
+        /// <param name="reference">The reference sentence.</param>
+        /// <param name="candidate">The candidate sentence.</param>
+        /// <param name="grams">The number of grams (default is 2).</param>
+        /// <returns>The score as a double.</returns>
+        public double ModifiedNGramPrecision(string reference, string candidate, int grams = 2)
+        {
+            var collection = new List<string> {reference};
+            return ModifiedNGramPrecision(collection, candidate, grams);
+        }
+
+        /// <summary>
+        /// Gets the Modified N-Gram precision.
+        /// </summary>
+        /// <param name="references">The reference sentences.</param>
+        /// <param name="candidate">The candidate sentence.</param>
+        /// <returns>The score as a double.</returns>
         public double ModifiedBiGramPrecision(ICollection<string> references, string candidate)
         {
             return ModifiedNGramPrecision(references, candidate, 2);

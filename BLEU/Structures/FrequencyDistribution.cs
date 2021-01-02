@@ -28,6 +28,8 @@ namespace BLEU.Structures
             }
         }
         
+        
+        
         /// <summary>
         /// Gets the label (key) which has the highest frequency in the frequency distribution.
         /// </summary>
