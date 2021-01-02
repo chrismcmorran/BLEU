@@ -61,6 +61,17 @@ namespace BLEU
         }
         
         /// <summary>
+        /// Calculates the modified unigram precision score as described in section 2.1 of the paper.
+        /// </summary>
+        /// <param name="references">The reference as a list.</param>
+        /// <param name="candidate">The candidate as a string.</param>
+        /// <returns>The Modified n-gram precision score.</returns>
+        public double ModifiedUnigramPrecision(List<string> references, string candidate)
+        {
+            return ModifiedNGramPrecision(references, candidate, 1);
+        }
+        
+        /// <summary>
         /// Computes the BrevityPenalty (BP). See section 2.3 of the paper.
         /// </summary>
         /// <param name="candidateTranslationLength">Variable c.</param>

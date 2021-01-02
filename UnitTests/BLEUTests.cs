@@ -45,5 +45,41 @@ namespace UnitTests
             double expected = 2.0 / 3.0;
             Assert.AreEqual(expected, precision);
         }
+        
+        [Test]
+        public void TestBiGramPrecisionSanity()
+        {
+            var candidate = "The cat the cat on the mat.";
+            var references = new List<string> {candidate};
+
+            var bleu = new BleuScore();
+            var precision = bleu.ModifiedBiGramPrecision(references, candidate);
+            double expected = 1.0;
+            Assert.AreEqual(expected, precision);
+        }
+        
+        [Test]
+        public void TestTriGramPrecisionSanity()
+        {
+            var candidate = "The cat the cat on the mat.";
+            var references = new List<string> {candidate};
+
+            var bleu = new BleuScore();
+            var precision = bleu.ModifiedNGramPrecision(references, candidate, 3);
+            double expected = 1.0;
+            Assert.AreEqual(expected, precision);
+        }
+        
+        [Test]
+        public void TestUniGramPrecisionSanity()
+        {
+            var candidate = "The cat the cat on the mat.";
+            var references = new List<string> {candidate};
+
+            var bleu = new BleuScore();
+            var precision = bleu.ModifiedUnigramPrecision(references, candidate);
+            double expected = 1.0;
+            Assert.AreEqual(expected, precision);
+        }
     }
 }
